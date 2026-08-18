@@ -1,0 +1,21 @@
+name: Build DLL
+
+on: [push, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Build
+        run: msbuild PrismTextureStreamerFB.sln /p:Configuration=Release /p:Platform=x64
+
+      - name: Upload DLL
+        uses: actions/upload-artifact@v4
+        with:
+          name: PrismTextureStreamerFB-DLL
+          path: x64/Release/*.dll
