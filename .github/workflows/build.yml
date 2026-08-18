@@ -11,8 +11,13 @@ jobs:
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v2
 
+      - name: Link WinRT Libraries
+        shell: powershell
+        run: |
+          Add-Content -Path "dllmain.cpp" -Value "`n#pragma comment(lib, `"windowsapp.lib`")`n#pragma comment(lib, `"runtimeobject.lib`")"
+
       - name: Build
-        run: msbuild PrismTextureStreamerFB.sln /p:Configuration=Release /p:Platform=x64 /p:WindowsTargetPlatformVersion=10.0 /p:LinkAdditionalDependencies="windowsapp.lib;runtimeobject.lib"
+        run: msbuild PrismTextureStreamerFB.sln /p:Configuration=Release /p:Platform=x64 /p:WindowsTargetPlatformVersion=10.0
 
       - name: Upload DLL
         uses: actions/upload-artifact@v4
